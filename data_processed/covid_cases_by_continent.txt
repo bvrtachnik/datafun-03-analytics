@@ -1,0 +1,25 @@
+COVID-19 Total Cases by Continent:
+Asia:
+  Total Cases: 301,499,099.0
+  Total Cases per Million: 6,812,483.48
+
+Europe:
+  Total Cases: 252,916,868.0
+  Total Cases per Million: 20,215,461.33
+
+Africa:
+  Total Cases: 13,145,380.0
+  Total Cases per Million: 2,686,892.79
+
+Oceania:
+  Total Cases: 15,003,352.0
+  Total Cases per Million: 6,102,363.12
+
+North America:
+  Total Cases: 124,492,666.0
+  Total Cases per Million: 9,640,628.41
+
+South America:
+  Total Cases: 68,809,418.0
+  Total Cases per Million: 2,630,887.59
+
