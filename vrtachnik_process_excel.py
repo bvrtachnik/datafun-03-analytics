@@ -1,5 +1,7 @@
 """
-Process an Excel file to filter the top 25 countries by population and save the results as a text file.
+This script reads the world_population.xlsx file, 
+extracts the top 3 most populated countries, 
+and saves the result to a text file in data_processed.
 """
 
 #####################################
@@ -7,86 +9,88 @@ Process an Excel file to filter the top 25 countries by population and save the 
 #####################################
 
 import pathlib
-import openpyxl
-
-# Import from local project modules
-from utils_logger import logger
+import openpyxl  # Ensure we can process Excel files properly
 
 #####################################
 # Declare Global Variables
 #####################################
 
-fetched_folder_name: str = "data"
-processed_folder_name: str = "data_processed"
+fetched_folder_name = "data"
+processed_folder_name = "data_processed"
+excel_file = "world_population.xlsx"
+output_filename = "top_3_worldpop.txt"
 
 #####################################
 # Define Functions
 #####################################
 
-def get_top_25_countries(file_path: pathlib.Path) -> list:
+def get_top_3_population(file_path: pathlib.Path):
     """
-    Extracts the top 25 countries with the highest population from the Excel file.
+    Extracts the top 3 most populated countries from the Excel file.
 
     Args:
         file_path (pathlib.Path): Path to the Excel file.
 
     Returns:
-        list: A list of tuples containing country names and formatted populations.
+        list: List of tuples (Country Name, Population)
     """
     try:
-        workbook = openpyxl.load_workbook(file_path)
+        workbook = openpyxl.load_workbook(file_path, read_only=True, data_only=True)
         sheet = workbook.active
 
-        country_population = []
+        population_data = []  # List to store (Country, Population)
 
-        # Loop through the data rows, skipping the first few header rows
-        for row in sheet.iter_rows(min_row=5, max_row=30, values_only=True):  
-            country = row[2]  # Column C - Country Name
-            population = row[4]  # Column E - Population
+        for row_num, row in enumerate(sheet.iter_rows(min_row=6, max_row=222, values_only=True), start=6):
+            if row is None or len(row) < 5:
+                continue  # Skip empty or malformed rows
 
-            if country and population:
-                # Ensure population is a number before formatting
+            country = row[3]  # Country name (Column D)
+            population = row[4]  # Population (Column E)
+
+            if country and population is not None:
                 try:
-                    formatted_population = f"{int(str(population).replace(',', '')):,}"
-                    country_population.append((country, formatted_population))
-                except ValueError:
-                    logger.warning(f"Skipping invalid population value: {population}")
+                    population_str = str(population).replace(",", "").strip()
+                    population_int = int(float(population_str))  # Convert to int
+                    population_data.append((country, population_int))
+                except (ValueError, TypeError):
+                    continue  # Skip invalid rows
 
-        # Sort by population in descending order
-        country_population.sort(key=lambda x: int(x[1].replace(',', '')), reverse=True)
+        # Sort by population in descending order and get the top 3
+        top_3 = sorted(population_data, key=lambda x: x[1], reverse=True)[:3]
+        return top_3
 
-        # Return only the top 25
-        return country_population[:25]
-
+    except FileNotFoundError:
+        print(f"Error: Excel file not found at {file_path}")
+        return None
     except Exception as e:
-        logger.error(f"Error processing Excel file: {e}")
-        return []
+        print(f"Error processing Excel file: {e}")
+        return None
 
-def process_excel_file():
+def save_top_3_population():
     """
-    Read an Excel file, extract the top 25 countries by population, and save results as a text file.
+    Reads the Excel file, extracts the top 3 most populated countries, 
+    and saves the data to a text file in data_processed.
     """
-    input_file = pathlib.Path(fetched_folder_name, "population_data.xlsx")
-    output_file = pathlib.Path(processed_folder_name, "top_25_countries_by_population.txt")
+    input_file = pathlib.Path(fetched_folder_name) / excel_file  # Path to Excel file
+    output_file = pathlib.Path(processed_folder_name) / output_filename  # Output path
 
-    top_countries = get_top_25_countries(input_file)
-    output_file.parent.mkdir(parents=True, exist_ok=True)
+    top_3 = get_top_3_population(input_file)
 
-    # Save results to a plain text file
-    with output_file.open('w', encoding='utf-8') as file:
-        file.write("Top 25 Countries by Population (2022):\n")
-        file.write("=" * 40 + "\n")
+    if top_3:
+        output_file.parent.mkdir(parents=True, exist_ok=True)  # Ensure folder exists
+        with open(output_file, "w", encoding="utf-8") as outfile:
+            outfile.write("Top 3 Most Populated Countries (2022):\n")
+            outfile.write("=" * 50 + "\n")
+            for country, population in top_3:
+                outfile.write(f"{country}: {population:,} (thousands)\n")
 
-        for country, population in top_countries:
-            file.write(f"{country}: {population}\n")
-
-    logger.info(f"Processed Excel file: {input_file}, Data saved to: {output_file}")
+        print(f"SUCCESS: Top 3 world populations saved to {output_file}")
+    else:
+        print("No valid data found in the Excel file.")
 
 #####################################
 # Main Execution
 #####################################
 
 if __name__ == "__main__":
-    logger.info("Starting Excel processing...")
-    process_excel_file()
-    logger.info("Excel processing complete.")
+    save_top_3_population()
