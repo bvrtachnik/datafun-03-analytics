@@ -1,4 +1,28 @@
-# datafun-03-analytics
+# datafun-03-analytics  
+Repository for **Module 3 of Data Analytics Fundamentals** at **Northwest Missouri State University**  
+
+---
+
+## 🔧 Create and Activate Project Virtual Environment  
+
+For Windows, navigate to the **local project folder** and create a virtual environment in the `.venv` folder.  
+
+```shell
+# Create virtual environment and virtual environment folder
+py -m venv .venv
+
+# Activate the virtual environment
+.venv\Scripts\Activate
+
+# Upgrade Pip and install dependencies
+py -m pip install --upgrade pip setuptools wheel
+py -m pip install -r requirements.txt
+
+
+```
+
+
+
 
 ## Overview
 This project demonstrates how to fetch and process various types of 
@@ -8,109 +32,75 @@ The repository includes:
 
 - Four example fetchers: Scripts to retrieve data from the web.
 - Four example processors: Scripts to analyze and process the fetched data.
-
-Start by running the examples to understand their functionality, and then build your own scripts to fetch and process data of your choice (using each of these example types).
+- Four fetchers with scripts to retrieve data from the web
+- Four processors with scripts to analyze and process fetched data
 
 ---
 ## Project Workflow
 
-### Step 1. Set Up Your Project
-1. Create a GitHub repo with default README.md (you'll need to manually add these example files).
-2. Clone your new repo down to your machine. 
-3. Open the folder in VS Code.
-4. Add a .gitignore file.
-5. Install the required packages - see [requirements.txt](requirements.txt).
+### Fetchers
 
-Full disclosure: We teach building repos from scratch because we assume students want to learn to create their own novel projects. 
-However, if you want to get a local copy of this repo down to your machine, you can click the "Use this template" green button to copy it all into your account.  
+vrtachnik_get_csv.py 
+   - Fetches a CSV file with global Covid 19 data
+     
+vrtachnik_get_excel.py
+   - Fetches an excel file with the world's population ranked from highest to lowest
+     
+vrtachnik_get_json.py
+   - Fetches a json file with the English Premier League Table results from the 1992/93 season to the 2018/19 season
+     
+vrtachnik_get_text.py
+   - Fetches a text file with the Content of the The Whale/Moby Dick by Herman Melville
 
-### Step 2. Run the Examples
-If you started with your own repo, copy the files from this GitHub as needed. 
-If you cloned the template, you'll have the example files already. 
+### Processors
 
-Read, review, and run each example script. 
-Open a terminal in the root project folder and run the appropriate 
-command for your operating system. 
-For example, these generally work on Windows. 
-Adjust the commands to work for your machine, 
-e.g. use python3 if Mac/Linux. 
+vrtachnik_process_csv.py
+   - Processor that processes the global Covid 19 data and lists the total cases and total cases per million per continent
+
+vrtachnik_process_excel.py
+   - Processor that processes the world population excel file and returns the 3 highest world populations
+
+vrtachnik_process_json.py
+   - Processor that processes the English Premier League results json file and returns the final annual season results for Manchester United from 1992/93 to 2018/19
+
+vrtachnik_process_text.py
+   - Processor that processes the Moby Dick text file and returns the count of times 'Ahab' is mentioned in the text
+
+## Execution Commands
+
+### Fetchers
 
 ```shell
-py fetch_scripts/example_get_csv.py
-py fetch_scripts/example_get_excel.py
-py fetch_scripts/example_get_json.py
-py fetch_scripts/example_get_text.py
-
-py process_scripts/example_process_csv.py
-py process_scripts/example_process_excel.py
-py process_scripts/example_process_json.py
-py process_scripts/example_process_text.py
-
+py vrtachnik_get_csv.py
+py vrtachnik_get_excel.py
+py vrtachnik_get_json.py
+py vrtachnik_get_text.py
 ```
 
-TODO: Replace the example commands with the actual commands used on your machine.
-Ensure all example scripts run without errors before proceeding.
- 
-### Step 3. Create and Run Your Data Fetchers
-1. Find data files on the web for each type (CSV, Excel, JSON, and text).  
-2. Create your own Python script to fetch each type of data and save it in a folder named **data**.
-3. Name your scripts:
-   1. yourname_get_csv.py
-   2. yourname_get_excel.py
-   3. yourname_get_json.py
-   4. yourname_get_text.py
-4. Implement your data-processing logic in small steps:
-   - Fetch data for one file type.
-   - Test, verify, and Git add-commit-push.
-  
-## Step 4. Create and Run Your Data Processors
-1. Determine a simple metric from each of your data files.  
-2. Create your own Python script to read the data, process it, and save it in a folder named **data_processed**.
-3. Name your scripts:
-   1. yourname_process_csv.py
-   2. yourname_process_excel.py
-   3. yourname_process_json.py
-   4. yourname_process_text.py
-4. Work incrementally, using git add-commit-push after each bit of progress. 
+### Processors
 
-## Step 5. Update README.md to Describe Your Work
-1. In your README.md, list each of your fetchers with a short description.
-2. In your README.md, list each of your processors with a short description of what it does. 
-3. Include the execution commands to run your fetchers and processors. 
+```shell
+py vrtachnik_process_csv.py
+py vrtachnik_process_excel.py
+py vrtachnik_process_json.py
+py vrtachnik_process_text.py
+```
 
----
+## Git Add-Commit-Push Workflow  
 
-## Helpful Documentation
-If you're unsure about any of the setup steps or tools, consult these resources:
-- [requests library documentation](https://docs.python-requests.org)
-- [GitHub: Create and Clone a Repo](prereqs/01-CreateAndClone.md)
-- [Set Up a Virtual Environment](docs/02-SetUpVirtualEnv.md)
-- [Create a .gitignore File](docs/03-CreateGitIgnore.md)
-- [Using Git: Add-Commit-Push](docs/04-GitAddCommitPush.md)
+Use the following commands to track, commit, and push changes to the remote repository.  
 
----
+```shell
+# Step 1: Add all changes in your working directory to the staging area
+git add .
 
-### Tips
-- Use descriptive filenames for the data you fetch - and proper file extensions.
-- Work incrementally—verify each small step works before moving to the next.
-- The examples are required reading - use them to learn and understand first. 
-- Test each script carefully before proceeding.
-- Use meaningful commit messages when pushing to GitHub to document your progress.
+# Step 2: Commit the staged changes to your local Git repository 
+# -m allows you to include a commit message describing your changes
+git commit -m "Your commit message here"
 
----
-## Review Commit History
-Once your project is complete, review your commit history in GitHub under the **Commits** tab. 
-Ensure your commit messages are clear and professional.
+# Step 3: Push the local commits to the remote repository on GitHub
+git push origin main
 
----
-## Finalize GitHub
-
-Make sure the following requirements have been met:
-
-- [ ] You have committed a useful .gitignore file.
-- [ ] You have committed a useful logs/project_log.log file. 
-- [ ] All example scripts executed successfully.
-- [ ] Four fetcher scripts created and executed.
-- [ ] Four processor scripts created and functional.
-- [ ] README.md includes explanations for fetchers and processors with commands for execution.
-- [ ] Each Python file contains a docstring with its purpose and input/output details.
+# (Only for first-time push) If this is your first push to a new repository:
+git push -u origin main  # Sets upstream branch for future pushes
+```

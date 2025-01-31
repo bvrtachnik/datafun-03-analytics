@@ -1,12 +1,16 @@
 """
-Process an Excel file to filter the top 25 countries by population and save the results as a text file.
+Process an Excel file to count occurrences of a specific word in a column.
+
 """
 
 #####################################
 # Import Modules
 #####################################
 
+# Import from Python Standard Library
 import pathlib
+
+# Import from external packages
 import openpyxl
 
 # Import from local project modules
@@ -16,71 +20,38 @@ from utils_logger import logger
 # Declare Global Variables
 #####################################
 
-fetched_folder_name: str = "data"
-processed_folder_name: str = "data_processed"
+fetched_folder_name: str = "example_data"
+processed_folder_name: str = "example_processed"
 
 #####################################
 # Define Functions
 #####################################
 
-def get_top_25_countries(file_path: pathlib.Path) -> list:
-    """
-    Extracts the top 25 countries with the highest population from the Excel file.
-
-    Args:
-        file_path (pathlib.Path): Path to the Excel file.
-
-    Returns:
-        list: A list of tuples containing country names and formatted populations.
-    """
+def count_word_in_column(file_path: pathlib.Path, column_letter: str, word: str) -> int:
+    """Count the occurrences of a specific word in a given column of an Excel file."""
     try:
         workbook = openpyxl.load_workbook(file_path)
         sheet = workbook.active
-
-        country_population = []
-
-        # Loop through the data rows, skipping the first few header rows
-        for row in sheet.iter_rows(min_row=5, max_row=30, values_only=True):  
-            country = row[2]  # Column C - Country Name
-            population = row[4]  # Column E - Population
-
-            if country and population:
-                # Ensure population is a number before formatting
-                try:
-                    formatted_population = f"{int(str(population).replace(',', '')):,}"
-                    country_population.append((country, formatted_population))
-                except ValueError:
-                    logger.warning(f"Skipping invalid population value: {population}")
-
-        # Sort by population in descending order
-        country_population.sort(key=lambda x: int(x[1].replace(',', '')), reverse=True)
-
-        # Return only the top 25
-        return country_population[:25]
-
+        count = 0
+        for cell in sheet[column_letter]:
+            if cell.value and isinstance(cell.value, str):
+                count += cell.value.lower().count(word.lower())
+        return count
     except Exception as e:
-        logger.error(f"Error processing Excel file: {e}")
-        return []
+        logger.error(f"Error reading Excel file: {e}")
+        return 0
 
 def process_excel_file():
-    """
-    Read an Excel file, extract the top 25 countries by population, and save results as a text file.
-    """
-    input_file = pathlib.Path(fetched_folder_name, "population_data.xlsx")
-    output_file = pathlib.Path(processed_folder_name, "top_25_countries_by_population.txt")
-
-    top_countries = get_top_25_countries(input_file)
+    """Read an Excel file, count occurrences of 'GitHub' in a specific column, and save the result."""
+    input_file = pathlib.Path(fetched_folder_name, "feedback.xlsx")
+    output_file = pathlib.Path(processed_folder_name, "excel_feedback_github_count.txt")
+    column_to_check = "A"  # Replace with the appropriate column letter
+    word_to_count = "GitHub"
+    word_count = count_word_in_column(input_file, column_to_check, word_to_count)
     output_file.parent.mkdir(parents=True, exist_ok=True)
-
-    # Save results to a plain text file
-    with output_file.open('w', encoding='utf-8') as file:
-        file.write("Top 25 Countries by Population (2022):\n")
-        file.write("=" * 40 + "\n")
-
-        for country, population in top_countries:
-            file.write(f"{country}: {population}\n")
-
-    logger.info(f"Processed Excel file: {input_file}, Data saved to: {output_file}")
+    with output_file.open('w') as file:
+        file.write(f"Occurrences of '{word_to_count}' in column {column_to_check}: {word_count}\n")
+    logger.info(f"Processed Excel file: {input_file}, Word count saved to: {output_file}")
 
 #####################################
 # Main Execution
