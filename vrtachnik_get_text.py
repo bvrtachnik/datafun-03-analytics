@@ -1,9 +1,8 @@
 """
-This example file fetches JSON data of the English Premier League 
-table from 1992/93 to 2018/19 from the web and saves it to a local 
-file named premier_league_table.json.
+This example file fetches a text file of Herman Mellville's Moby Dick from the web 
+and saves it to a local file named moby_dick.txt in a folder named data.
 
-TODO: Save a copy of the provided utils_logger.py file 
+Please save a copy of the provided utils_logger.py file 
 in the same folder as this file.
 """
 
@@ -12,7 +11,6 @@ in the same folder as this file.
 #####################################
 
 # Import from Python Standard Library
-import json
 import pathlib
 
 # Import from external packages
@@ -31,57 +29,57 @@ fetched_folder_name = "data"
 # Define Functions
 #####################################
 
-def fetch_json_file(folder_name: str, filename: str, url: str) -> None:
+def fetch_txt_file(folder_name: str, filename: str, url: str) -> None:
     """
-    Fetch JSON data from the given URL and write it to a file.
+    Fetch text data from the given URL and write it to a file.
 
     Args:
         folder_name (str): Name of the folder to save the file.
         filename (str): Name of the output file.
-        url (str): URL of the JSON file to fetch.
+        url (str): URL of the text file to fetch.
 
     Returns:
         None
 
     Example:
-        fetch_json_file("data", "data.json", "https://example.com/data.json")
+        fetch_txt_file("data", "romeo.txt", "https://example.com/romeo.txt")
     """
     if not url:
         logger.error("The URL provided is empty. Please provide a valid URL.")
         return
 
     try:
-        logger.info(f"Fetching JSON data from {url}...")
+        logger.info(f"Fetching text data from {url}...")
         response = requests.get(url)
         response.raise_for_status()
-        write_json_file(folder_name, filename, response.json())
-        logger.info(f"SUCCESS: JSON file fetched and saved as {filename}")
+        write_txt_file(folder_name, filename, response.text)
+        logger.info(f"SUCCESS: Text file fetched and saved as {filename}")
     except requests.exceptions.HTTPError as http_err:
         logger.error(f"HTTP error occurred: {http_err}")
     except requests.exceptions.RequestException as req_err:
         logger.error(f"Request error occurred: {req_err}")
 
-def write_json_file(folder_name: str, filename: str, json_data: dict) -> None:
+def write_txt_file(folder_name: str, filename: str, string_data: str) -> None:
     """
-    Write JSON data to a file.
+    Write text data to a file.
 
     Args:
         folder_name (str): Name of the folder to save the file.
         filename (str): Name of the output file.
-        json_data (dict): JSON data to write to the file.
+        string_data (str): Text content to write to the file.
 
     Returns:
         None
     """
     file_path = pathlib.Path(folder_name).joinpath(filename)
     try:
-        logger.info(f"Writing JSON data to {file_path}...")
+        logger.info(f"Writing data to {file_path}...")
         file_path.parent.mkdir(parents=True, exist_ok=True)
-        with file_path.open('w') as file:
-            json.dump(json_data, file, indent=4)
-        logger.info(f"SUCCESS: JSON data written to {file_path}")
+        with file_path.open('w', encoding= 'utf-8') as file:
+            file.write(string_data)
+        logger.info(f"SUCCESS: Data written to {file_path}")
     except IOError as io_err:
-        logger.error(f"Error writing JSON data to {file_path}: {io_err}")
+        logger.error(f"Error writing to file {file_path}: {io_err}")
 
 #####################################
 # Define main() function
@@ -89,11 +87,11 @@ def write_json_file(folder_name: str, filename: str, json_data: dict) -> None:
 
 def main():
     """
-    Main function to demonstrate fetching JSON data.
+    Main function to demonstrate fetching text data.
     """
-    json_url = 'https://raw.githubusercontent.com/sharmadhiraj/free-json-datasets/refs/heads/master/datasets/premier-league-points-table.json'
-    logger.info("Starting JSON fetch demonstration...")
-    fetch_json_file(fetched_folder_name, "premier_league_table.json", json_url)
+    txt_url = 'https://www.gutenberg.org/files/2701/2701-0.txt'
+    logger.info("Starting text fetch demonstration...")
+    fetch_txt_file(fetched_folder_name, "moby_dick.txt", txt_url)
 
 #####################################
 # Conditional Execution
@@ -102,4 +100,4 @@ def main():
 if __name__ == '__main__':
     main()
 
-# TODO: Run this script to ensure all functions work as intended.
+# TODO: Run this as a script to test that all functions work as intended.

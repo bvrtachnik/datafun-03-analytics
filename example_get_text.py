@@ -1,6 +1,6 @@
 """
-This example file fetches a text file of Romeo and Juliet from the web 
-and saves it to a local file named romeo.txt in a folder named example_data.
+This example file fetches a text file of Herman Mellville's Moby Dick from the web 
+and saves it to a local file named moby_dick.txt in a folder named data.
 
 Please save a copy of the provided utils_logger.py file 
 in the same folder as this file.
@@ -23,7 +23,7 @@ from utils_logger import logger
 # Declare Global Variables
 #####################################
 
-fetched_folder_name = "example_data"
+fetched_folder_name = "data"
 
 #####################################
 # Define Functions
@@ -89,9 +89,9 @@ def main():
     """
     Main function to demonstrate fetching text data.
     """
-    txt_url = 'https://raw.githubusercontent.com/denisecase/datafun-03-analytics/main/hosted/romeo.txt'
+    txt_url = 'https://www.gutenberg.org/files/2701/2701-0.txt'
     logger.info("Starting text fetch demonstration...")
-    fetch_txt_file(fetched_folder_name, "romeo.txt", txt_url)
+    fetch_txt_file(fetched_folder_name, "moby_dick.txt", txt_url)
 
 #####################################
 # Conditional Execution
